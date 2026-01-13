@@ -2,14 +2,14 @@
 
 Fill this after running `scripts/run_all.m`.
 
-## Baseline step (+10 °C)
+## Baseline step (ΔT = +35 °C)
 | Metric | Target | Achieved | Pass? |
 |---|---:|---:|:---:|
-| Overshoot (°C) | < 1.0 | (metrics_baseline.csv) | |
-| Settling time (s) | < 30 | | |
-| SSE (°C) | < 0.2 | | |
+| Overshoot (°C) | < 2.0 | (metrics_baseline.csv) | |
+| Settling time (s) | ≈ 60 | | |
+| SSE (°C) | < 2.0 | | |
 
-## Disturbance (−2 °C step)
+## Disturbance (−3 °C step)
 | Metric | Target | Achieved | Pass? |
 |---|---:|---:|:---:|
-| Recovery time (s) | < 20 | (metrics_disturbance.csv) | |
+| Recovery time (s) | < 30 | (metrics_disturbance.csv) | |

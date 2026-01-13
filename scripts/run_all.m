@@ -9,15 +9,15 @@ function run_all()
   graphics_toolkit("gnuplot");
   setenv("GNUTERM","wxt");   % interactive terminal for gnuplot on Windows
 
-  plant.K=0.30; plant.tau=8.0; plant.L=1.2; plant.Tamb=25;
+  plant.K=55; plant.tau=8.0; plant.L=1.2; plant.Tamb=25;
 
   ctrl.Ts=0.5; ctrl.Kp=5.2; ctrl.Ki=0.68;
   ctrl.umin=0.0; ctrl.umax=1.0; ctrl.use_aw=true; ctrl.use_ff=false;
 
-  sim.t_end=120; sim.r0=0; sim.r_step=10; sim.t_step=5;
+  sim.t_end=120; sim.r0=0; sim.r_step=35; sim.t_step=5;
   sim.meas_sigma=0.05; sim.proc_sigma=0.00;
 
-  dist.enable=true; dist.t_dist=55; dist.mag=-2.0;
+  dist.enable=true; dist.t_dist=55; dist.mag=-3.0;
 
   % --- Data generation / identification ---
   csv_path = fullfile(out_data, "synthetic_step.csv");
