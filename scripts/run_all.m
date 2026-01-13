@@ -5,6 +5,10 @@ function run_all()
   out_data = "../data";
   mkdir(out_fig); mkdir(out_data);
 
+  % (GUI Octave works fine for interactive figures + saving)
+  graphics_toolkit("gnuplot");
+  setenv("GNUTERM","wxt");   % interactive terminal for gnuplot on Windows
+
   plant.K=0.30; plant.tau=8.0; plant.L=1.2; plant.Tamb=25;
 
   ctrl.Ts=0.5; ctrl.Kp=5.2; ctrl.Ki=0.68;
@@ -15,27 +19,54 @@ function run_all()
 
   dist.enable=true; dist.t_dist=55; dist.mag=-2.0;
 
+  % --- Data generation / identification ---
   csv_path = fullfile(out_data, "synthetic_step.csv");
   gen_synthetic_step_data(plant, ctrl.Ts, csv_path);
 
   fit = fit_fopdt_from_csv(csv_path, ctrl.Ts);
   savejson(fullfile(out_data,"fopdt_fit_results.json"), plant, fit);
-  plot_fopdt_fit_overlay(csv_path, fit, ctrl.Ts, fullfile(out_fig,"fopdt_fit_overlay.png"));
 
+  % --- Plot 1: FOPDT fit overlay ---
+  plot_fopdt_fit_overlay(csv_path, fit, ctrl.Ts, "");
+  save_current_fig(fullfile(out_fig,"fopdt_fit_overlay.png"));
+
+  % --- Baseline sim ---
   sim.dist=struct("enable",false);
   [t,r,y,u,e,m]=pi_sim(plant,ctrl,sim);
   write_metrics_csv(fullfile(out_data,"metrics_baseline.csv"), m);
-  plot_tracking(t,r,y,plant, fullfile(out_fig,"baseline_tracking.png"));
-  plot_control(t,u, fullfile(out_fig,"baseline_control.png"));
 
+  % --- Plot 2: baseline tracking ---
+  plot_tracking(t,r,y,plant, "");
+  save_current_fig(fullfile(out_fig,"baseline_tracking.png"));
+
+  % --- Plot 3: baseline control effort ---
+  plot_control(t,u, "");
+  save_current_fig(fullfile(out_fig,"baseline_control.png"));
+
+  % --- Disturbance sim ---
   sim2=sim; sim2.dist=dist;
   [t2,r2,y2,u2,e2,m2]=pi_sim(plant,ctrl,sim2);
   write_metrics_csv(fullfile(out_data,"metrics_disturbance.csv"), m2);
-  plot_disturbance(t2,r2,y2,u2,plant,dist, fullfile(out_fig,"disturbance_response.png"));
 
+  % --- Plot 4: disturbance response ---
+  plot_disturbance(t2,r2,y2,u2,plant,dist, "");
+  save_current_fig(fullfile(out_fig,"disturbance_response.png"));
+
+  % --- Monte Carlo ---
   mc.N=60; mc.var=0.25;
-  M = monte_carlo(plant,ctrl,sim,mc, fullfile(out_fig,"monte_carlo_overlay.png"));
+  M = monte_carlo(plant,ctrl,sim,mc, "");
   write_metrics_table_csv(fullfile(out_data,"metrics_monte_carlo.csv"), M);
 
-  fprintf("Done. See ../figures and ../data\n");
+  % Monte Carlo plot is figure(5) in monte_carlo()
+  save_current_fig(fullfile(out_fig,"monte_carlo_overlay.png"));
+
+  fprintf("Done. Saved PNGs to ../figures and data to ../data\n");
+  pause();  % keep figures open until you press a key in the terminal
+endfunction
+
+
+function save_current_fig(out_png)
+  drawnow();
+  pause(0.2);              % give the renderer a moment
+  print(out_png, "-dpng"); % autosave
 endfunction

@@ -1,5 +1,8 @@
 function M=monte_carlo(plant0,ctrl,sim,mc,out_png)
+  if nargin < 5, out_png = ""; end
+
   N=mc.N; var=mc.var; M=zeros(N,7);
+
   figure(5); clf; hold on;
   for i=1:N
     plant=plant0;
@@ -13,7 +16,13 @@ function M=monte_carlo(plant0,ctrl,sim,mc,out_png)
     M(i,:)=[m.overshoot_degC, m.settling_time_s, m.sse_degC, m.u_max, plant.K, plant.tau, plant.L];
     plot(t, plant0.Tamb+y, "linewidth",0.5);
   endfor
+
   grid on; xlabel("Time (s)"); ylabel("Temp (degC)");
   title(sprintf("Monte Carlo Overlay (N=%d, ±%.0f%%)", N, 100*var));
-  print(out_png,"-dpng");
+
+  drawnow();
+
+  if ~isempty(out_png)
+    print(out_png,"-dpng");
+  endif
 endfunction

@@ -1,0 +1,5 @@
+{
+  "true": {"K": 0.300000, "tau": 8.000000, "L": 1.200000},
+  "estimated": {"K": 0.242880, "tau": 2.500000, "L": 0.000000},
+  "notes": "2% threshold + 63.2% method on synthetic_step.csv"
+}
