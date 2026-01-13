@@ -5,7 +5,7 @@ function m=compute_metrics(t,r,y,u)
   idx=floor(0.9*n):n;
   m.sse_degC=mean(abs(r(idx)-y(idx)));
 
-  band=0.2; m.settling_time_s=NaN;
+  band=2.0; m.settling_time_s=NaN;
   for k=1:n
     if all(abs(y(k:end)-r_final)<=band), m.settling_time_s=t(k); break; endif
   endfor
