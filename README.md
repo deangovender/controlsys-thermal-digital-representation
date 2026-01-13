@@ -1,4 +1,4 @@
-# Thermal PI Control — Digital Twin (FOPDT)
+# Thermal PI Control — Digital Representation (FOPDT)
 
 A **portfolio control-systems showcase**: requirements → modeling → PI design → discrete implementation → verification → robustness.
 
